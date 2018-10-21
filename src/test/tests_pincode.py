@@ -1,6 +1,9 @@
 import unittest
 from models.pincode import Pincode
+from helpers.database import DatabaseHelper
+
 from test_helpers.database import DatabaseTestHelper
+
 from exception.invalid_pincode_exception import InvalidPincodeException
 
 class TestPincode (unittest.TestCase):
@@ -10,7 +13,7 @@ class TestPincode (unittest.TestCase):
 
     def test_save_pincode_in_database(self):
         # given
-        pincode = Pincode(self.global_pincode)
+        pincode = Pincode(self.global_pincode, DatabaseHelper)
         # when
         pincode.save()
 
@@ -23,7 +26,7 @@ class TestPincode (unittest.TestCase):
 
     def test_throws_exception_when_pincode_is_already_used(self):
         # given
-        pincode = Pincode(self.global_pincode)
+        pincode = Pincode(self.global_pincode, DatabaseHelper)
         # when
         pincode.save()
         # then

@@ -2,16 +2,17 @@
 # -*- coding: utf-8 -*-
 import unittest
 from main import app as my_app
-from test_helpers.database import DatabaseTestHelper
 import json
-
+from mock import patch, MagicMock
+from test_helpers.database_faker import DatabaseHelper
 
 class TestMain(unittest.TestCase):
 
     def setUp(self):
+        DatabaseHelper.clean_db()
         self.app = my_app.test_client()
-        DatabaseTestHelper.clean_table('pincodes')
 
+    @patch('commands.get_customer_luck_numbers.DatabaseHelper', DatabaseHelper)
     def test_returns_pincode(self):
         # given
         data = {'cpf': '35818079805', 'pincode': '1q2w3e4r5t'}
@@ -21,6 +22,7 @@ class TestMain(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         self.assertIn(data['pincode'], str(res.data))
 
+    @patch('commands.get_customer_luck_numbers.DatabaseHelper', DatabaseHelper)
     def test_returns_error_when_pincode_already_exists(self):
         # given
         data = {'cpf': '35818079805', 'pincode': '1q2w3e4r5t'}

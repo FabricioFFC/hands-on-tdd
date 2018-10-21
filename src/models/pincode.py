@@ -1,10 +1,9 @@
 from exception.invalid_pincode_exception import InvalidPincodeException
-from helpers.database import DatabaseHelper
 
 class Pincode(object):
-    def __init__(self, pincode):
+    def __init__(self, pincode, Database):
         self.pincode = pincode
-        self.db = DatabaseHelper('pincodes')
+        self.db = Database('pincodes')
 
     def save(self):
         pincode_from_database = self.db.find_one("pincode = '%s'" % self.pincode)

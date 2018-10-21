@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import unittest
+from mock import patch, MagicMock
 from commands.get_customer_luck_numbers import GetCustomerLuckNumbersCommand
-from test_helpers.database import DatabaseTestHelper
-
+from test_helpers.database_faker import DatabaseHelper
 class TestGetCustomerLuckNumbersCommand(unittest.TestCase):
-    def tearDown(self):
-        DatabaseTestHelper.clean_table('pincodes')
-
     def test_return_invalid_cpf_when_cpf_is_invalid(self):
         # given
         invalid_cpf = '111'
@@ -26,6 +23,7 @@ class TestGetCustomerLuckNumbersCommand(unittest.TestCase):
         result = GetCustomerLuckNumbersCommand.call(cpf, invalid_pincode)
         # then
         self.assertEqual(result['error'], expected_error)
+    @patch('commands.get_customer_luck_numbers.DatabaseHelper', DatabaseHelper)
     def test_return_pincode_when_cpf_and_pincode_are_valid(self):
         # given
         cpf = '35818079805'
